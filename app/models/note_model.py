@@ -1,0 +1,1 @@
+# Lớp đại diện cho ghi chú
