@@ -1,2 +1,13 @@
-print("Chạy ứng dụng tại đây ")
-print("tạo nhánh develop")
+import customtkinter as ctk
+
+from app.gui.main_window import MainWindow
+
+def main():
+    ctk.set_appearance_mode("dark")
+    ctk.set_default_color_theme("dark-blue")
+    
+    app = MainWindow()
+    app.mainloop()
+
+if __name__ == "__main__":
+    main()

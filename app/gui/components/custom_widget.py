@@ -1,1 +1,0 @@
-#Thành phần phụ (nút, label,...)
