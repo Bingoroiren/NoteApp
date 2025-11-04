@@ -27,19 +27,19 @@ class Sidebar(ctk.CTkFrame):
         
         # Categories
         categories = [
-            ("☀️", "Ngày của Tôi"),
-            ("⭐", "Quan trọng"),
-            ("📋", "Đã lập kế hoạch"),
-            ("👤", "Đã giao cho tôi"),
-            ("📁", "Tác vụ"),
-            ("💡", "Bật đầu"),
+            ( "Ngày của Tôi"),
+            ( "Quan trọng"),
+            ( "Đã lập kế hoạch"),
+            (  "Đã giao cho tôi"),
+            ( "Tác vụ"),
+            ( "Bắt đầu"),
         ]
         
         self.category_buttons = {}
-        for icon, name in categories:
+        for name in categories:
             btn = ctk.CTkButton(
                 self,
-                text=f"{icon}  {name}",
+                text=f"{name}",
                 anchor="w",
                 fg_color="transparent",
                 hover_color=("#3b3b3b", "#2b2b2b"),
