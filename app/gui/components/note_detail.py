@@ -8,7 +8,9 @@ class NoteDetail(ctk.CTkFrame):
         self.note_model = NoteModel()
         self.current_note_id = None
         self.parent = parent  # Thêm để refresh list
-        
+        # Header
+        header = ctk.CTkFrame(self, fg_color="transparent")
+        header.pack(fill="x", padx=20, pady=20)
        
         
         # Nút tạo mới
@@ -30,9 +32,7 @@ class NoteDetail(ctk.CTkFrame):
         )
         self.title_entry.pack(fill="x", padx=20, pady=(0, 10))
         
-         # Header
-        header = ctk.CTkFrame(self, fg_color="transparent")
-        header.pack(fill="x", padx=20, pady=20)
+         
         
         ctk.CTkLabel(
             header,
