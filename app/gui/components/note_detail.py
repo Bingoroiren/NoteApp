@@ -9,8 +9,10 @@ class NoteDetail(ctk.CTkFrame):
         self.current_note_id = None
         self.parent = parent  # Thêm để refresh list
         
+        # Header
+        header = ctk.CTkFrame(self, fg_color="transparent")
+        header.pack(fill="x", padx=20, pady=20)
        
-        
         # Nút tạo mới
         ctk.CTkButton(
             header,
@@ -29,10 +31,6 @@ class NoteDetail(ctk.CTkFrame):
             font=("Segoe UI", 14)
         )
         self.title_entry.pack(fill="x", padx=20, pady=(0, 10))
-        
-         # Header
-        header = ctk.CTkFrame(self, fg_color="transparent")
-        header.pack(fill="x", padx=20, pady=20)
         
         ctk.CTkLabel(
             header,
