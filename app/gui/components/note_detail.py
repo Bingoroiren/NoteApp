@@ -165,3 +165,5 @@ class NoteDetail(ctk.CTkFrame):
         self.content_text.delete("1.0", "end")
         self.current_note_id = None
         self.status_label.configure(text="")
+
+    # Ví dụ đây là dòng code m viết vào
