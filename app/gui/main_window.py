@@ -134,3 +134,5 @@ class MainWindow(ctk.CTk):
     def on_category_change(self, category: str):
         self.current_category = category
         self.load_notes()
+
+        #Test commit
