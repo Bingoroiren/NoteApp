@@ -1,6 +1,4 @@
-"""
-Note list component for displaying notes
-"""
+
 import customtkinter as ctk
 from typing import Callable, List, Dict
 from datetime import datetime
@@ -10,11 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class NoteListItem(ctk.CTkFrame):
-    """Individual note list item"""
     
     def __init__(self, parent, note: Dict, on_click: Callable, 
                  on_star: Callable, on_delete: Callable):
-        super().__init__(parent, fg_color="gray20", corner_radius=10, height=120)
+        super().__init__(parent, fg_color="white", corner_radius=10, height=120)
         
         self.note = note
         self.on_click = on_click
@@ -24,15 +21,23 @@ class NoteListItem(ctk.CTkFrame):
         self.grid_propagate(False)
         self.setup_ui()
         
-        # Bind click event
         self.bind("<Button-1>", lambda e: self.on_click(self.note['_id']))
+        
+        # Hover effect
+        self.bind("<Enter>", self.on_hover_enter)
+        self.bind("<Leave>", self.on_hover_leave)
+    
+    def on_hover_enter(self, event):
+        self.configure(fg_color="#f0f9fc")
+    
+    def on_hover_leave(self, event):
+        self.configure(fg_color="white")
     
     def setup_ui(self):
         """Setup the note item UI"""
-        # Configure grid
         self.grid_columnconfigure(1, weight=1)
         
-        # Priority indicator (left bar)
+        # Priority indicator
         priority = self.note.get('priority', 'medium')
         priority_colors = {
             'urgent': '#DC2626',
@@ -49,7 +54,7 @@ class NoteListItem(ctk.CTkFrame):
         )
         priority_bar.grid(row=0, column=0, rowspan=3, sticky="ns", padx=(0, 10))
         
-        # Title and star
+        # Header
         header_frame = ctk.CTkFrame(self, fg_color="transparent")
         header_frame.grid(row=0, column=1, columnspan=2, sticky="ew", padx=10, pady=(10, 5))
         header_frame.grid_columnconfigure(0, weight=1)
@@ -58,7 +63,8 @@ class NoteListItem(ctk.CTkFrame):
             header_frame,
             text=self.note.get('title', 'Untitled'),
             font=("Arial", 14, "bold"),
-            anchor="w"
+            anchor="w",
+            text_color="#016191"
         )
         title.grid(row=0, column=0, sticky="w")
         title.bind("<Button-1>", lambda e: self.on_click(self.note['_id']))
@@ -72,7 +78,8 @@ class NoteListItem(ctk.CTkFrame):
             height=30,
             font=("Arial", 16),
             fg_color="transparent",
-            hover_color="gray30",
+            hover_color="#e8f4f8",
+            text_color="#0197ca",
             command=lambda: self.on_star(self.note['_id'])
         )
         star_btn.grid(row=0, column=1, padx=5)
@@ -85,7 +92,7 @@ class NoteListItem(ctk.CTkFrame):
             self,
             text=preview,
             font=("Arial", 12),
-            text_color="gray70",
+            text_color="#4a5568",
             anchor="w",
             justify="left",
             wraplength=350
@@ -93,7 +100,7 @@ class NoteListItem(ctk.CTkFrame):
         content_label.grid(row=1, column=1, columnspan=2, sticky="ew", padx=10, pady=5)
         content_label.bind("<Button-1>", lambda e: self.on_click(self.note['_id']))
         
-        # Footer with metadata
+        # Footer
         footer_frame = ctk.CTkFrame(self, fg_color="transparent")
         footer_frame.grid(row=2, column=1, columnspan=2, sticky="ew", padx=10, pady=(5, 10))
         footer_frame.grid_columnconfigure(1, weight=1)
@@ -106,7 +113,7 @@ class NoteListItem(ctk.CTkFrame):
                 footer_frame,
                 text=tags_text,
                 font=("Arial", 10),
-                text_color="gray50"
+                text_color="#78a7bc"
             )
             tags_label.grid(row=0, column=0, sticky="w")
         
@@ -118,7 +125,7 @@ class NoteListItem(ctk.CTkFrame):
                 footer_frame,
                 text=date_str,
                 font=("Arial", 10),
-                text_color="gray50"
+                text_color="#78a7bc"
             )
             date_label.grid(row=0, column=1, sticky="e", padx=(10, 0))
         
@@ -128,7 +135,7 @@ class NoteListItem(ctk.CTkFrame):
             footer_frame,
             text=f"📁 {category}",
             font=("Arial", 10),
-            text_color="gray50"
+            text_color="#78a7bc"
         )
         category_label.grid(row=0, column=2, sticky="e", padx=(10, 0))
     
@@ -159,7 +166,6 @@ class NoteListItem(ctk.CTkFrame):
 
 
 class NoteList(ctk.CTkScrollableFrame):
-    """Scrollable list of notes"""
     
     def __init__(self, parent, on_note_click: Callable, 
                  on_star_click: Callable, on_delete: Callable):
@@ -172,7 +178,6 @@ class NoteList(ctk.CTkScrollableFrame):
         self.notes = []
         self.note_widgets = []
         
-        # Empty state
         self.empty_label = None
         self.show_empty_state()
     
@@ -180,7 +185,6 @@ class NoteList(ctk.CTkScrollableFrame):
         """Update the list of notes"""
         self.notes = notes
         
-        # Clear existing widgets
         for widget in self.note_widgets:
             widget.destroy()
         self.note_widgets.clear()
@@ -193,7 +197,6 @@ class NoteList(ctk.CTkScrollableFrame):
             self.show_empty_state()
             return
         
-        # Create note items
         for note in notes:
             item = NoteListItem(
                 self,
@@ -208,30 +211,25 @@ class NoteList(ctk.CTkScrollableFrame):
         logger.info(f"Displayed {len(notes)} notes")
     
     def show_empty_state(self):
-        """Show empty state when no notes"""
         self.empty_label = ctk.CTkLabel(
             self,
-            text="📝\n\nNo notes yet\n\nClick '+ New Note' to create your first note",
+            text="\n\nNo notes yet\n\nClick '+ New Note' to create your first note",
             font=("Arial", 14),
-            text_color="gray50",
+            text_color="#78a7bc",
             justify="center"
         )
         self.empty_label.pack(expand=True, pady=100)
     
     def get_selected_notes(self) -> List[str]:
-        """Get list of selected note IDs"""
-        # TODO: Implement multi-select functionality
         return []
     
     def select_note(self, note_id: str):
-        """Highlight a specific note"""
         for widget in self.note_widgets:
             if hasattr(widget, 'note') and widget.note['_id'] == note_id:
-                widget.configure(fg_color="gray30")
+                widget.configure(fg_color="#e8f4f8")
             else:
-                widget.configure(fg_color="gray20")
+                widget.configure(fg_color="white")
     
     def clear_selection(self):
-        """Clear all selections"""
         for widget in self.note_widgets:
-            widget.configure(fg_color="gray20")
+            widget.configure(fg_color="white")
