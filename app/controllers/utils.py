@@ -1,6 +1,4 @@
-"""
-Utility functions for the application
-"""
+
 import re
 from datetime import datetime, timedelta
 import hashlib
