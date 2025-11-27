@@ -1,3 +1,32 @@
-customtkinter
-pymongo
-pillow
+# Core dependencies
+customtkinter==5.2.1
+pymongo==4.6.0
+python-dotenv==1.0.0
+dnspython==2.4.2
+
+# Image handling
+Pillow==10.1.0
+
+# Date and time utilities
+python-dateutil==2.8.2
+
+# Notifications
+plyer==2.1.0
+
+# Export functionality
+reportlab==4.0.7
+markdown==3.5.1
+python-docx==1.1.0
+
+# Encryption
+cryptography==41.0.7
+
+# GUI enhancements
+CTkMessagebox==2.5
+
+# Date picker (optional but recommended)
+tkcalendar==1.6.1
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
