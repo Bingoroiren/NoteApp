@@ -1,6 +1,4 @@
-"""
-Database connection and management module
-"""
+
 import os
 from pymongo import MongoClient, ASCENDING, DESCENDING
 from dotenv import load_dotenv
@@ -16,20 +14,17 @@ logger = logging.getLogger(__name__)
 
 
 class Database:
-    """MongoDB database connection manager"""
     
     _instance = None
     _client = None
     _db = None
     
     def __new__(cls):
-        """Singleton pattern to ensure only one database connection"""
         if cls._instance is None:
             cls._instance = super(Database, cls).__new__(cls)
         return cls._instance
     
     def __init__(self):
-        """Initialize database connection"""
         if self._client is None:
             try:
                 mongo_uri = os.getenv('MONGO_URI', 'mongodb://localhost:27017/')
@@ -50,7 +45,6 @@ class Database:
                 raise
     
     def _create_indexes(self):
-        """Create database indexes for better performance"""
         try:
             # Notes collection indexes
             notes = self._db.notes
@@ -77,21 +71,17 @@ class Database:
             logger.warning(f"Error creating indexes: {str(e)}")
     
     def get_database(self):
-        """Get database instance"""
         return self._db
     
     def get_collection(self, collection_name):
-        """Get a specific collection"""
         return self._db[collection_name]
     
     def close_connection(self):
-        """Close database connection"""
         if self._client:
             self._client.close()
             logger.info("Database connection closed")
     
     def test_connection(self):
-        """Test if database connection is active"""
         try:
             self._client.server_info()
             return True
@@ -100,7 +90,6 @@ class Database:
             return False
     
     def backup_database(self, backup_path=None):
-        """Create a backup of the database"""
         try:
             if backup_path is None:
                 backup_path = os.getenv('BACKUP_LOCATION', './backups/')
@@ -137,7 +126,6 @@ class Database:
             return None
     
     def restore_database(self, backup_file):
-        """Restore database from a backup file"""
         try:
             import json
             
@@ -161,7 +149,6 @@ class Database:
             return False
     
     def get_statistics(self):
-        """Get database statistics"""
         try:
             stats = {
                 'total_notes': self._db.notes.count_documents({}),

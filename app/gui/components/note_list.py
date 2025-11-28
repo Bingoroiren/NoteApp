@@ -34,7 +34,6 @@ class NoteListItem(ctk.CTkFrame):
         self.configure(fg_color="white")
     
     def setup_ui(self):
-        """Setup the note item UI"""
         self.grid_columnconfigure(1, weight=1)
         
         # Priority indicator
@@ -140,7 +139,6 @@ class NoteListItem(ctk.CTkFrame):
         category_label.grid(row=0, column=2, sticky="e", padx=(10, 0))
     
     def format_date(self, date) -> str:
-        """Format date for display"""
         if isinstance(date, str):
             try:
                 date = datetime.fromisoformat(date)
@@ -182,7 +180,6 @@ class NoteList(ctk.CTkScrollableFrame):
         self.show_empty_state()
     
     def update_notes(self, notes: List[Dict]):
-        """Update the list of notes"""
         self.notes = notes
         
         for widget in self.note_widgets:

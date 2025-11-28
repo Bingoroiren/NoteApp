@@ -43,7 +43,7 @@ class Sidebar(ctk.CTkFrame):
         # Separator
         ctk.CTkFrame(self.scrollable_frame, height=2, fg_color="#adcace").pack(fill="x", padx=18, pady=8)
         
-        # === PHẦN SẮP XẾP ===
+        #   PHẦN SẮP XẾP  
         self.create_section("SẮP XẾP")
         
         sort_frame = ctk.CTkFrame(self.scrollable_frame, fg_color="white", corner_radius=8)
@@ -209,7 +209,6 @@ class Sidebar(ctk.CTkFrame):
         ctk.CTkFrame(self.scrollable_frame, height=10, fg_color="transparent").pack()
     
     def create_section(self, title: str):
-        """Tạo section header"""
         label = ctk.CTkLabel(
             self.scrollable_frame,
             text=title,
@@ -221,7 +220,6 @@ class Sidebar(ctk.CTkFrame):
     
     def create_nav_button(self, text: str, command: Callable, 
                          active: bool = False, color: str = None) -> ctk.CTkButton:
-        """Tạo nút điều hướng"""
         btn = ctk.CTkButton(
             self.scrollable_frame,
             text=text,
@@ -239,7 +237,6 @@ class Sidebar(ctk.CTkFrame):
         return btn
     
     def create_category_button(self, category: str):
-        """Tạo nút danh mục"""
         # Map tên tiếng Việt sang tiếng Anh
         cat_map = {
             "Chung": "General",
@@ -265,7 +262,6 @@ class Sidebar(ctk.CTkFrame):
         btn.pack(fill="x", pady=1)
     
     def create_stat_row(self, label: str, value: str):
-        """Tạo hàng thống kê"""
         row = ctk.CTkFrame(self.stats_frame, fg_color="transparent")
         row.pack(fill="x", padx=12, pady=4)
         
@@ -290,19 +286,14 @@ class Sidebar(ctk.CTkFrame):
         self.stats_labels[label] = value_widget
     
     def toggle_sort(self, sort_by: str):
-        """Toggle sắp xếp - nhấn lần 1: bật, nhấn lần 2: đảo chiều"""
         if self.sort_by == sort_by:
-            # Đã chọn cùng loại sắp xếp -> đảo chiều
             self.sort_ascending = not self.sort_ascending
         else:
-            # Chọn loại sắp xếp mới
             self.sort_by = sort_by
             self.sort_ascending = True  # Mặc định tăng dần
         
-        # Cập nhật text và trạng thái nút
         self.update_sort_buttons()
         
-        # Gọi callback
         if self.on_sort_callback:
             self.on_sort_callback(self.sort_by, self.sort_ascending)
 
@@ -311,12 +302,10 @@ class Sidebar(ctk.CTkFrame):
         self.sort_ascending = False
         self.update_sort_buttons()
         
-        # Gọi callback với None để báo không sắp xếp
         if self.on_sort_callback:
             self.on_sort_callback(self.sort_by, self.sort_ascending)
 
     def update_sort_buttons(self):
-        """Cập nhật trạng thái và text của các nút sắp xếp"""
         # Reset tất cả nút
         sort_buttons = {
             "created_date": self.btn_date,
@@ -363,7 +352,6 @@ class Sidebar(ctk.CTkFrame):
                 text_color="#016191"
             )
     def set_filter(self, filter_type: str):
-        """Thiết lập filter"""
         self.current_filter = filter_type
         
         # Reset tất cả nút
@@ -391,7 +379,6 @@ class Sidebar(ctk.CTkFrame):
             self.on_filter_callback(filter_type)
     
     def update_stats(self, stats: dict):
-        """Cập nhật thống kê"""
         if "total_notes" in stats:
             self.stats_labels["Tổng số"].configure(text=str(stats["total_notes"]))
         
@@ -402,7 +389,6 @@ class Sidebar(ctk.CTkFrame):
             self.stats_labels["Tuần này"].configure(text=str(stats["due_this_week"]))
     
     def update_categories(self, categories: list):
-        """Cập nhật danh sách danh mục - GIỮ NGUYÊN LOGIC"""
         # Xóa các nút danh mục cũ
         for widget in self.categories_frame.winfo_children():
             widget.destroy()
@@ -427,5 +413,4 @@ class Sidebar(ctk.CTkFrame):
             more_btn.pack(fill="x", pady=2)
     
     def show_all_categories(self):
-        """Hiển thị tất cả danh mục - GIỮ NGUYÊN LOGIC"""
         logger.info("Hiển thị tất cả danh mục")

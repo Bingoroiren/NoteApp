@@ -1,6 +1,4 @@
-"""
-Note model for managing note data
-"""
+
 from datetime import datetime
 from bson import ObjectId
 from typing import List, Dict, Optional
@@ -12,14 +10,12 @@ logger = logging.getLogger(__name__)
 
 
 class NoteModel:
-    """Model for Note operations"""
     
     def __init__(self):
         self.db = db_instance.get_database()
         self.collection = self.db.notes
     
     def create_note(self, note_data: Dict) -> Optional[str]:
-        """Create a new note"""
         try:
             # Set default values
             note = {
@@ -57,7 +53,6 @@ class NoteModel:
             return None
     
     def get_note(self, note_id: str) -> Optional[Dict]:
-        """Get a note by ID"""
         try:
             note = self.collection.find_one({'_id': ObjectId(note_id)})
             if note:
@@ -68,7 +63,6 @@ class NoteModel:
             return None
     
     def update_note(self, note_id: str, update_data: Dict) -> bool:
-        """Update a note"""
         try:
             # Get current version for history
             current_note = self.get_note(note_id)
@@ -111,7 +105,6 @@ class NoteModel:
             return False
     
     def delete_note(self, note_id: str) -> bool:
-        """Delete a note"""
         try:
             result = self.collection.delete_one({'_id': ObjectId(note_id)})
             
@@ -132,7 +125,6 @@ class NoteModel:
     
     def get_all_notes(self, filters: Dict = None, sort_by: str = 'created_date', 
                      ascending: bool = False) -> List[Dict]:
-        """Get all notes with optional filters"""
         try:
             query = filters or {}
             sort_order = 1 if ascending else -1
@@ -150,7 +142,6 @@ class NoteModel:
             return []
     
     def search_notes(self, search_term: str, filters: Dict = None) -> List[Dict]:
-        """Search notes by title or content"""
         try:
             query = {
                 '$or': [
@@ -176,27 +167,21 @@ class NoteModel:
             return []
     
     def get_starred_notes(self) -> List[Dict]:
-        """Get all starred notes"""
         return self.get_all_notes({'is_starred': True})
     
     def get_archived_notes(self) -> List[Dict]:
-        """Get all archived notes"""
         return self.get_all_notes({'is_archived': True})
     
     def get_notes_by_category(self, category: str) -> List[Dict]:
-        """Get notes by category"""
         return self.get_all_notes({'category': category})
     
     def get_notes_by_tag(self, tag: str) -> List[Dict]:
-        """Get notes by tag"""
         return self.get_all_notes({'tags': tag})
     
     def get_notes_by_priority(self, priority: str) -> List[Dict]:
-        """Get notes by priority"""
         return self.get_all_notes({'priority': priority})
     
     def get_due_notes(self, days_ahead: int = 7) -> List[Dict]:
-        """Get notes due within specified days"""
         try:
             from datetime import timedelta
             
@@ -219,7 +204,6 @@ class NoteModel:
             return []
     
     def toggle_star(self, note_id: str) -> bool:
-        """Toggle star status of a note"""
         try:
             note = self.get_note(note_id)
             if not note:
@@ -233,7 +217,6 @@ class NoteModel:
             return False
     
     def toggle_archive(self, note_id: str) -> bool:
-        """Toggle archive status of a note"""
         try:
             note = self.get_note(note_id)
             if not note:
@@ -247,7 +230,6 @@ class NoteModel:
             return False
     
     def bulk_delete(self, note_ids: List[str]) -> int:
-        """Delete multiple notes"""
         try:
             object_ids = [ObjectId(nid) for nid in note_ids]
             result = self.collection.delete_many({'_id': {'$in': object_ids}})
@@ -260,7 +242,6 @@ class NoteModel:
             return 0
     
     def bulk_update_category(self, note_ids: List[str], category: str) -> int:
-        """Update category for multiple notes"""
         try:
             object_ids = [ObjectId(nid) for nid in note_ids]
             result = self.collection.update_many(
@@ -275,7 +256,6 @@ class NoteModel:
             return 0
     
     def get_categories(self) -> List[str]:
-        """Get all unique categories"""
         try:
             categories = self.collection.distinct('category')
             return sorted(categories)
@@ -284,7 +264,6 @@ class NoteModel:
             return []
     
     def get_tags(self) -> List[str]:
-        """Get all unique tags"""
         try:
             # Get all tags from all notes
             all_tags = []
@@ -300,11 +279,9 @@ class NoteModel:
             return []
     
     def _calculate_word_count(self, content: str) -> int:
-        """Calculate word count of content"""
         return len(content.split())
     
     def _log_audit(self, action: str, note_id: str, data: Dict):
-        """Log action to audit trail"""
         try:
             audit_entry = {
                 'action': action,

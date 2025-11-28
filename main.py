@@ -27,7 +27,6 @@ from app.gui.components.add_note import AddNoteDialog
 
 
 class NoteApp(ctk.CTk):
-    """Ứng dụng ghi chú tối ưu"""
     
     COLORS = {
         'primary': '#016191',
@@ -75,7 +74,6 @@ class NoteApp(ctk.CTk):
         logger.info("Ứng dụng khởi động thành công")
     
     def setup_ui(self):
-        """Thiết lập giao diện với layout tối ưu"""
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
         
@@ -149,7 +147,6 @@ class NoteApp(ctk.CTk):
         self.note_detail_visible = False
     
     def on_note_select(self, note_id: str):
-        """Xử lý chọn ghi chú - HIỆN NOTE DETAIL"""
         self.current_note_id = note_id
         
         try:
@@ -169,7 +166,6 @@ class NoteApp(ctk.CTk):
             self.show_error("Không thể tải ghi chú")
     
     def on_note_close(self):
-        """Đóng note detail và reset layout về trạng thái ban đầu"""
         if self.note_detail_visible:
             # Reset grid weights về trạng thái ban đầu
             self.right_panel.grid_columnconfigure(0, weight=1)  # Note list chiếm toàn bộ
@@ -187,7 +183,6 @@ class NoteApp(ctk.CTk):
             self.right_panel.update_idletasks()
             logger.info("Đã đóng note detail và reset layout")
     def refresh_notes(self):
-        """Làm mới danh sách ghi chú với sắp xếp"""
         try:
             # Lấy notes theo filter
             if self.current_filter == "all":
@@ -226,7 +221,6 @@ class NoteApp(ctk.CTk):
             self.show_error("Không thể làm mới danh sách")
     
     def apply_sorting(self, notes: list) -> list:
-        """Áp dụng sắp xếp cho notes"""
         if self.sort_by == "priority":
             priority_order = {"urgent": 0, "high": 1, "medium": 2, "low": 3}
             notes.sort(
@@ -247,19 +241,16 @@ class NoteApp(ctk.CTk):
         return notes
     
     def on_filter_change(self, filter_type: str):
-        """Xử lý thay đổi bộ lọc"""
         self.current_filter = filter_type
         self.refresh_notes()
     
     def on_sort_change(self, sort_by: str, ascending: bool):
-        """Xử lý thay đổi sắp xếp - TÍNH NĂNG MỚI"""
         self.sort_by = sort_by
         self.sort_ascending = ascending
         self.refresh_notes()
         logger.info(f"Sắp xếp theo: {sort_by}, tăng dần: {ascending}")
     
     def on_search(self, event=None):
-        """Xử lý tìm kiếm"""
         search_term = self.search_entry.get().strip()
         
         if not search_term:
@@ -274,13 +265,11 @@ class NoteApp(ctk.CTk):
             logger.error(f"Lỗi tìm kiếm: {str(e)}")
     
     def add_note(self):
-        """Mở dialog thêm ghi chú"""
         dialog = AddNoteDialog(self, self.controller)
         self.wait_window(dialog)
         self.refresh_notes()
     
     def on_note_update(self, note_id: str, **kwargs):
-        """Xử lý cập nhật ghi chú"""
         try:
             if self.controller.update_note(note_id, **kwargs):
                 self.refresh_notes()
@@ -292,7 +281,6 @@ class NoteApp(ctk.CTk):
             self.show_error("Không thể cập nhật ghi chú")
     
     def on_star_click(self, note_id: str):
-        """Xử lý đánh dấu sao"""
         try:
             if self.controller.toggle_star(note_id):
                 self.refresh_notes()
@@ -304,7 +292,6 @@ class NoteApp(ctk.CTk):
             logger.error(f"Lỗi đánh dấu sao: {str(e)}")
     
     def on_note_delete(self, note_id: str):
-        """Xử lý xóa ghi chú - ĐÃ SỬA"""
         try:
             result = self.show_confirm(
                 "Xác nhận xóa",
@@ -323,7 +310,6 @@ class NoteApp(ctk.CTk):
             self.show_error("Không thể xóa ghi chú")
     
     def on_attachment_add(self, note_id: str, file_path: str):
-        """Xử lý thêm tệp đính kèm"""
         try:
             attachment_id = self.controller.add_attachment(note_id, file_path)
             if attachment_id:
@@ -337,7 +323,6 @@ class NoteApp(ctk.CTk):
             self.show_error("Không thể thêm tệp đính kèm")
     
     def on_attachment_delete(self, note_id: str, attachment_id: str):
-        """Xử lý xóa tệp đính kèm"""
         try:
             result = self.show_confirm(
                 "Xác nhận xóa",
@@ -356,7 +341,6 @@ class NoteApp(ctk.CTk):
             self.show_error("Không thể xóa tệp")
     
     def show_error(self, message: str):
-        """Hiển thị thông báo lỗi - GỌN HƠN"""
         dialog = ctk.CTkToplevel(self)
         dialog.title("Lỗi")
         dialog.geometry("350x180")
@@ -393,7 +377,6 @@ class NoteApp(ctk.CTk):
         ).pack(pady=10)
     
     def show_confirm(self, title: str, message: str) -> bool:
-        """Hiển thị dialog xác nhận - GỌN HƠN"""
         result = {"confirmed": False}
         
         dialog = ctk.CTkToplevel(self)
@@ -456,7 +439,6 @@ class NoteApp(ctk.CTk):
         return result["confirmed"]
     
     def on_closing(self):
-        """Xử lý đóng cửa sổ"""
         logger.info("Đóng ứng dụng")
         db_instance.close_connection()
         self.destroy()

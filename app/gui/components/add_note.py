@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 class AddNoteDialog(ctk.CTkToplevel):
-    """Dialog tạo ghi chú - ĐÃ FIX CHỌN MÀU"""
     
     def __init__(self, parent, controller):
         super().__init__(parent)
@@ -22,7 +21,6 @@ class AddNoteDialog(ctk.CTkToplevel):
         self.result = None
         self.selected_color = "#FFFFFF"  # Màu mặc định
         
-        # Cấu hình window - GỌN HƠN
         self.title("Tạo ghi chú mới")
         self.geometry("580x650")
         self.minsize(500, 600)
@@ -37,7 +35,6 @@ class AddNoteDialog(ctk.CTkToplevel):
         self.title_entry.focus()
     
     def center_window(self):
-        """Center dialog"""
         self.update_idletasks()
         
         parent_x = self.master.winfo_x()
@@ -54,8 +51,6 @@ class AddNoteDialog(ctk.CTkToplevel):
         self.geometry(f"{dialog_width}x{dialog_height}+{x}+{y}")
     
     def setup_ui(self):
-        """Thiết lập giao diện - TỐI ƯU"""
-        # Main container với scroll
         self.scrollable_frame = ctk.CTkScrollableFrame(
             self, 
             fg_color="transparent",
@@ -64,7 +59,6 @@ class AddNoteDialog(ctk.CTkToplevel):
         )
         self.scrollable_frame.pack(fill="both", expand=True, padx=18, pady=18)
         
-        # Title - GỌN HƠN
         ctk.CTkLabel(
             self.scrollable_frame,
             text="Tạo ghi chú mới",
@@ -72,7 +66,6 @@ class AddNoteDialog(ctk.CTkToplevel):
             text_color="#016191"
         ).pack(pady=(0, 18))
         
-        # Note title
         ctk.CTkLabel(
             self.scrollable_frame,
             text="Tiêu đề *",
@@ -92,7 +85,6 @@ class AddNoteDialog(ctk.CTkToplevel):
         )
         self.title_entry.pack(fill="x", pady=(0, 8))
         
-        # Content
         ctk.CTkLabel(
             self.scrollable_frame,
             text="Nội dung",
@@ -113,13 +105,11 @@ class AddNoteDialog(ctk.CTkToplevel):
         )
         self.content_text.pack(fill="x", pady=(0, 12))
         
-        # Two column layout
         meta_frame = ctk.CTkFrame(self.scrollable_frame, fg_color="transparent")
         meta_frame.pack(fill="x", pady=8)
         meta_frame.grid_columnconfigure(0, weight=1)
         meta_frame.grid_columnconfigure(1, weight=1)
         
-        # Category
         left_frame = ctk.CTkFrame(meta_frame, fg_color="transparent")
         left_frame.grid(row=0, column=0, sticky="ew", padx=(0, 8))
         
@@ -145,7 +135,6 @@ class AddNoteDialog(ctk.CTkToplevel):
         )
         category_menu.pack(fill="x")
         
-        # Priority
         right_frame = ctk.CTkFrame(meta_frame, fg_color="transparent")
         right_frame.grid(row=0, column=1, sticky="ew", padx=(8, 0))
         
@@ -191,15 +180,12 @@ class AddNoteDialog(ctk.CTkToplevel):
         )
         self.tags_entry.pack(fill="x", pady=(0, 12))
         
-        # === PHẦN NGÀY ĐẾN HẠN VÀ NHẮC NHỞ - THAY THẾ MÀU SẮC ===
         due_reminder_frame = ctk.CTkFrame(self.scrollable_frame, fg_color="white", corner_radius=8)
         due_reminder_frame.pack(fill="x", pady=12, padx=2)
 
-        # Container chính
         due_reminder_container = ctk.CTkFrame(due_reminder_frame, fg_color="transparent")
         due_reminder_container.pack(fill="x", padx=12, pady=10)
 
-        # Ngày đến hạn
         due_date_frame = ctk.CTkFrame(due_reminder_container, fg_color="transparent")
         due_date_frame.pack(fill="x", pady=5)
 
@@ -246,7 +232,6 @@ class AddNoteDialog(ctk.CTkToplevel):
             self.due_date_entry.pack(side="left", padx=12, pady=8)
             self.due_date_entry.insert(0, datetime.now().strftime("%d/%m/%Y"))
 
-        # Nút ngày nhanh
         quick_dates_frame = ctk.CTkFrame(self.due_date_frame, fg_color="transparent")
         quick_dates_frame.pack(side="left", padx=10, pady=8)
 
@@ -270,7 +255,6 @@ class AddNoteDialog(ctk.CTkToplevel):
             )
             btn.pack(side="left", padx=2)
 
-        # Thời gian nhắc nhở
         reminder_frame = ctk.CTkFrame(due_reminder_container, fg_color="transparent")
         reminder_frame.pack(fill="x", pady=5)
 
@@ -405,14 +389,11 @@ class AddNoteDialog(ctk.CTkToplevel):
         """Highlight nút màu đã chọn - TÍNH NĂNG MỚI"""
         for color, btn in self.color_buttons:
             if color == selected_color:
-                # Border dày hơn cho màu đã chọn
                 btn.configure(border_width=3, border_color="#016191")
             else:
-                # Border bình thường
                 btn.configure(border_width=2, border_color="#78a7bc")
     
     def validate_inputs(self) -> bool:
-        """Validate form inputs"""
         title = self.title_entry.get().strip()
         if not title:
             self.show_error("Tiêu đề là bắt buộc")
@@ -421,7 +402,6 @@ class AddNoteDialog(ctk.CTkToplevel):
         return True
     
     def save(self):
-        """Lưu ghi chú - ĐÃ THÊM NGÀY ĐẾN HẠN VÀ NHẮC NHỞ"""
         if not self.validate_inputs():
             return
         
@@ -429,7 +409,6 @@ class AddNoteDialog(ctk.CTkToplevel):
             title = self.title_entry.get().strip()
             content = self.content_text.get("1.0", "end-1c").strip()
             
-            # Chuyển đổi danh mục và độ ưu tiên
             category_map = {
                 "Chung": "General",
                 "Công việc": "Work", 
@@ -452,7 +431,6 @@ class AddNoteDialog(ctk.CTkToplevel):
             tags_text = self.tags_entry.get().strip()
             tags = [tag.strip() for tag in tags_text.split(',') if tag.strip()]
             
-            # Xử lý ngày đến hạn
             due_date = None
             if self.due_date_frame.winfo_ismapped():
                 if TKCALENDAR_AVAILABLE:
@@ -474,7 +452,6 @@ class AddNoteDialog(ctk.CTkToplevel):
                         except:
                             pass
             
-            # Xử lý nhắc nhở
             reminders = []
             if self.reminder_frame.winfo_ismapped():
                 try:
@@ -549,7 +526,6 @@ class AddNoteDialog(ctk.CTkToplevel):
             self.due_date_btn.configure(text="Ngày đến hạn", fg_color="#16A34A")
 
     def toggle_reminder(self):
-        """Toggle hiển thị nhắc nhở"""
         if self.reminder_frame.winfo_ismapped():
             self.reminder_frame.pack_forget()
             self.reminder_btn.configure(text="Nhắc nhở", fg_color="#0197ca")
@@ -557,7 +533,6 @@ class AddNoteDialog(ctk.CTkToplevel):
             self.reminder_frame.pack(side="left", padx=(10, 0), pady=0)
             self.reminder_btn.configure(text="Nhắc nhở", fg_color="#16A34A")
     def set_quick_date(self, days: int):
-        """Đặt ngày nhanh"""
         target_date = datetime.now() + timedelta(days=days)
         
         if TKCALENDAR_AVAILABLE:
@@ -570,7 +545,6 @@ class AddNoteDialog(ctk.CTkToplevel):
             self.due_date_entry.delete(0, "end")
             self.due_date_entry.insert(0, target_date.strftime("%d/%m/%Y"))
     def show_error(self, message: str):
-        """Show error message - GỌN HƠN"""
         error_dialog = ctk.CTkToplevel(self)
         error_dialog.title("Lỗi")
         error_dialog.geometry("350x150")

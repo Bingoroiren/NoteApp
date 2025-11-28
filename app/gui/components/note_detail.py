@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class NoteDetail(ctk.CTkFrame):
-    """Chi tiết ghi chú - ĐÃ SỬA TẤT CẢ LỖI"""
     
     COLORS = {
         'primary': '#016191',
@@ -220,7 +219,6 @@ class NoteDetail(ctk.CTkFrame):
         self.content_text.grid(row=0, column=0, sticky="nsew", pady=8)
         self.content_text.bind("<KeyRelease>", self.auto_save_content)
         
-        # === PHẦN TAGS ===
         tags_frame = ctk.CTkFrame(
             self.content_frame, 
             fg_color=self.COLORS['bg_card'],
@@ -246,7 +244,6 @@ class NoteDetail(ctk.CTkFrame):
         )
         self.tags_entry.pack(side="left", fill="x", expand=True, padx=8, pady=8)
         self.tags_entry.bind("<Return>", self.update_tags)
-        # === PHẦN THỜI HẠN & NHẮC HẸN ===
         self.reminder_frame = ctk.CTkFrame(
             self.metadata_frame, 
             fg_color="transparent"
@@ -339,7 +336,6 @@ class NoteDetail(ctk.CTkFrame):
         )
         reminder_btn.pack(side="left", padx=5)
         
-        # Nút xóa nhắc (ban đầu ẩn)
         self.clear_reminder_btn = ctk.CTkButton(
             reminder_frame,
             text="Xóa",
@@ -356,7 +352,6 @@ class NoteDetail(ctk.CTkFrame):
         self.clear_reminder_btn.pack(side="left", padx=2)
         self.clear_reminder_btn.pack_forget()  # Ẩn ban đầu
         
-        # === PHẦN TỆP ĐÍNH KÈM ===
         attachments_frame = ctk.CTkFrame(
             self.content_frame,
             fg_color=self.COLORS['bg_card'],
@@ -385,14 +380,13 @@ class NoteDetail(ctk.CTkFrame):
         )
         add_attachment_btn.grid(row=0, column=1, padx=12, pady=8, sticky="e")
         
-        # Danh sách tệp đính kèm
         self.attachments_frame = ctk.CTkFrame(
             attachments_frame,
             fg_color="transparent"
         )
         self.attachments_frame.grid(row=1, column=0, columnspan=2, sticky="ew", padx=12, pady=(0, 8))
         
-        # === FOOTER ===
+        #   FOOTER  
         footer_frame = ctk.CTkFrame(self, fg_color="transparent", height=35)
         footer_frame.grid(row=3, column=0, sticky="ew", padx=15, pady=(0, 15))
         
@@ -415,12 +409,10 @@ class NoteDetail(ctk.CTkFrame):
         self.show_empty_state()
     
     def close_detail(self):
-        """Đóng chi tiết - TÍNH NĂNG MỚI"""
         if self.on_close:
             self.on_close()
     
     def display_note(self, note: Dict):
-        """Hiển thị chi tiết ghi chú"""
         self.current_note = note
         
         if hasattr(self, 'empty_label') and self.empty_label:
@@ -536,7 +528,6 @@ class NoteDetail(ctk.CTkFrame):
         logger.info(f"Hiển thị ghi chú: {note['_id']}")
     
     def display_attachments(self, attachments: list):
-        """Hiển thị danh sách tệp đính kèm - ĐÃ SỬA PREVIEW"""
         for widget in self.attachments_frame.winfo_children():
             widget.destroy()
         
@@ -610,7 +601,6 @@ class NoteDetail(ctk.CTkFrame):
                 )
                 view_btn.pack(side="left", padx=2)
             
-            # Nút xóa - ĐÃ SỬA
             delete_btn = ctk.CTkButton(
                 action_frame,
                 text="Xóa",
@@ -627,7 +617,6 @@ class NoteDetail(ctk.CTkFrame):
             delete_btn.pack(side="left", padx=2)
     
     def preview_image(self, filepath: str, filename: str):
-        """Hiển thị preview ảnh - ĐÃ SỬA HIỂN THỊ TRÊN CÙNG"""
         if self.preview_window and self.preview_window.winfo_exists():
             self.preview_window.destroy()
         
@@ -690,12 +679,10 @@ class NoteDetail(ctk.CTkFrame):
             ).pack(expand=True)
     
     def delete_attachment(self, attachment_id: str):
-        """Xóa tệp đính kèm - ĐÃ SỬA"""
         if self.current_note:
             self.on_attachment_delete(self.current_note['_id'], attachment_id)
     
     def delete_note(self):
-        """Xóa ghi chú - ĐÃ SỬA"""
         if self.current_note:
             # Gọi callback từ main app để xử lý xóa
             from tkinter import messagebox
@@ -709,7 +696,6 @@ class NoteDetail(ctk.CTkFrame):
                     self.master.master.on_note_delete(self.current_note['_id'])
     
     def format_file_size(self, size_bytes: int) -> str:
-        """Format kích thước file"""
         for unit in ['B', 'KB', 'MB']:
             if size_bytes < 1024.0:
                 return f"{size_bytes:.1f} {unit}"
@@ -717,7 +703,6 @@ class NoteDetail(ctk.CTkFrame):
         return f"{size_bytes:.1f} GB"
     
     def save_title(self, event=None):
-        """Lưu tiêu đề"""
         if not self.current_note:
             return
         
@@ -727,7 +712,6 @@ class NoteDetail(ctk.CTkFrame):
             self.show_save_status("Đã lưu tiêu đề")
     
     def auto_save_content(self, event=None):
-        """Tự động lưu nội dung"""
         if not self.current_note:
             return
         
@@ -739,7 +723,6 @@ class NoteDetail(ctk.CTkFrame):
         self.save_timer = self.after(1000, self.save_content)
     
     def save_content(self):
-        """Lưu nội dung"""
         if not self.current_note:
             return
         
@@ -749,7 +732,6 @@ class NoteDetail(ctk.CTkFrame):
             self.show_save_status("Đã lưu")
     
     def update_category(self, value):
-        """Cập nhật danh mục"""
         if not self.current_note:
             return
         
@@ -766,7 +748,6 @@ class NoteDetail(ctk.CTkFrame):
         self.on_update(self.current_note['_id'], category=category_en)
     
     def update_priority(self, value):
-        """Cập nhật độ ưu tiên"""
         if not self.current_note:
             return
         
@@ -781,7 +762,6 @@ class NoteDetail(ctk.CTkFrame):
         self.on_update(self.current_note['_id'], priority=priority_en)
     
     def update_tags(self, event=None):
-        """Cập nhật tags"""
         if not self.current_note:
             return
         
@@ -792,7 +772,6 @@ class NoteDetail(ctk.CTkFrame):
         self.show_save_status("Đã cập nhật nhãn")
     
     def toggle_star(self):
-        """Toggle trạng thái sao"""
         if self.current_note:
             self.on_update(
                 self.current_note['_id'],
@@ -800,7 +779,6 @@ class NoteDetail(ctk.CTkFrame):
             )
     
     def archive_note(self):
-        """Lưu trữ ghi chú"""
         if self.current_note:
             self.on_update(
                 self.current_note['_id'],
@@ -808,7 +786,6 @@ class NoteDetail(ctk.CTkFrame):
             )
     
     def add_attachment(self):
-        """Thêm tệp đính kèm"""
         if not self.current_note:
             return
         
@@ -826,7 +803,6 @@ class NoteDetail(ctk.CTkFrame):
             self.on_attachment_add(self.current_note['_id'], file_path)
     
     def update_word_count(self):
-        """Cập nhật số từ và ký tự"""
         content = self.content_text.get("1.0", "end-1c")
         words = len(content.split())
         chars = len(content)
@@ -834,12 +810,10 @@ class NoteDetail(ctk.CTkFrame):
         self.word_count_label.configure(text=f"Số từ: {words} | Ký tự: {chars}")
     
     def show_save_status(self, message: str):
-        """Hiển thị trạng thái lưu"""
         self.save_status_label.configure(text=message)
         self.after(2000, lambda: self.save_status_label.configure(text=""))
     
     def show_empty_state(self):
-        """Hiển thị trạng thái trống"""
         self.empty_label = ctk.CTkLabel(
             self,
             text="\n\nChọn một ghi chú để xem chi tiết\n\nhoặc tạo ghi chú mới",
@@ -850,7 +824,6 @@ class NoteDetail(ctk.CTkFrame):
         self.empty_label.place(relx=0.5, rely=0.5, anchor="center")
     
     def clear(self):
-        """Xóa view chi tiết"""
         self.current_note = None
         self.title_entry.delete(0, "end")
         self.content_text.delete("1.0", "end")
@@ -861,7 +834,6 @@ class NoteDetail(ctk.CTkFrame):
         self.clear_reminder_btn.pack_forget()
         self.show_empty_state()
     def manage_reminder(self):
-        """Quản lý nhắc hẹn"""
         if not self.current_note:
             return
         
@@ -940,7 +912,6 @@ class NoteDetail(ctk.CTkFrame):
         confirm_btn.pack(pady=15)
 
     def validate_time(self, time_string):
-        """Validate time format"""
         try:
             datetime.strptime(time_string, '%H:%M')
             return True
@@ -948,13 +919,11 @@ class NoteDetail(ctk.CTkFrame):
             return False
 
     def clear_reminder(self):
-        """Xóa nhắc hẹn"""
         if self.current_note:
             self.on_update(self.current_note['_id'], reminder_datetime=None)
             self.show_save_status("Đã xóa nhắc hẹn")
     
     def manage_due_date(self):
-        """Quản lý ngày đến hạn"""
         if not self.current_note:
             return
         
@@ -1012,7 +981,6 @@ class NoteDetail(ctk.CTkFrame):
         confirm_btn.pack(pady=10)
 
     def validate_date(self, date_string):
-        """Validate date format"""
         try:
             datetime.strptime(date_string, '%Y-%m-%d')
             return True
@@ -1020,7 +988,6 @@ class NoteDetail(ctk.CTkFrame):
             return False
 
     def clear_due_date(self):
-        """Xóa ngày đến hạn"""
         if self.current_note:
             self.on_update(self.current_note['_id'], due_date=None)
             self.show_save_status("Đã xóa hạn")
