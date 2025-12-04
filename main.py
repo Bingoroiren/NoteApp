@@ -48,9 +48,8 @@ class NoteApp(ctk.CTk):
     def __init__(self):
         super().__init__()
         
-        # Cấu hình cửa sổ - THU GỌN HƠN
         self.title("NoteApp")
-        self.geometry("1200x700")  # Nhỏ gọn hơn từ 1400x800
+        self.geometry("1200x700")  
         
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("blue")
@@ -77,7 +76,6 @@ class NoteApp(ctk.CTk):
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
         
-        # Sidebar - GIỮ NGUYÊN KÍCH THƯỚC
         self.sidebar = Sidebar(self, self.on_filter_change, self.on_sort_change)
         self.sidebar.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
         
@@ -85,10 +83,9 @@ class NoteApp(ctk.CTk):
         self.right_panel = ctk.CTkFrame(self, fg_color="transparent")
         self.right_panel.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
         self.right_panel.grid_columnconfigure(0, weight=1)  # Note list
-        self.right_panel.grid_columnconfigure(1, weight=0, minsize=0)    # Note detail - ẨN BAN ĐẦU
+        self.right_panel.grid_columnconfigure(1, weight=0, minsize=0)    
         self.right_panel.grid_rowconfigure(1, weight=1)
         
-        # Thanh công cụ trên - GỌN HƠN
         top_bar = ctk.CTkFrame(
             self.right_panel, 
             height=50,  # Giảm từ 60
@@ -98,7 +95,7 @@ class NoteApp(ctk.CTk):
         top_bar.grid(row=0, column=0, columnspan=2, sticky="ew", pady=(0, 8))
         top_bar.grid_columnconfigure(0, weight=1)
         
-        # Ô tìm kiếm - NHỎ GỌN HƠN
+  
         self.search_entry = ctk.CTkEntry(
             top_bar,
             placeholder_text="Tìm kiếm...",
@@ -111,7 +108,7 @@ class NoteApp(ctk.CTk):
         self.search_entry.grid(row=0, column=0, sticky="ew", padx=10, pady=8)
         self.search_entry.bind("<KeyRelease>", self.on_search)
         
-        # Nút thêm ghi chú - DÙNG CHỮ
+       
         add_btn = ctk.CTkButton(
             top_bar,
             text="Thêm ghi chú",
@@ -135,7 +132,7 @@ class NoteApp(ctk.CTk):
         )
         self.note_list.grid(row=1, column=0, sticky="nsew", padx=(0, 5))
         
-        # Chi tiết ghi chú - ẨN BAN ĐẦU
+      
         self.note_detail = NoteDetail(
             self.right_panel,
             self.on_note_update,
@@ -143,7 +140,6 @@ class NoteApp(ctk.CTk):
             self.on_attachment_delete,
             self.on_note_close  # Thêm callback đóng
         )
-        # KHÔNG GRID BAN ĐẦU - chỉ grid khi chọn note
         self.note_detail_visible = False
     
     def on_note_select(self, note_id: str):

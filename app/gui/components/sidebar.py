@@ -43,7 +43,7 @@ class Sidebar(ctk.CTkFrame):
         # Separator
         ctk.CTkFrame(self.scrollable_frame, height=2, fg_color="#adcace").pack(fill="x", padx=18, pady=8)
         
-        #   PHẦN SẮP XẾP  
+     
         self.create_section("SẮP XẾP")
         
         sort_frame = ctk.CTkFrame(self.scrollable_frame, fg_color="white", corner_radius=8)

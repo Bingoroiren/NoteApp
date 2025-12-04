@@ -1,6 +1,4 @@
-"""
-Reminder controller for handling reminders and notifications
-"""
+
 from datetime import datetime, timedelta
 from typing import List, Dict
 import logging
@@ -37,7 +35,7 @@ class ReminderController:
         logger.info("Reminder controller stopped")
     
     def _check_reminders(self):
-        """Background thread to check for due reminders"""
+        
         while self.running:
             try:
                 current_time = datetime.now()
@@ -138,7 +136,7 @@ class ReminderController:
             logger.error(f"Error sending notification: {str(e)}")
     
     def _calculate_next_reminder(self, current_time: datetime, recurring: str) -> datetime:
-        """Calculate the next reminder time based on recurring pattern"""
+      
         if recurring == 'daily':
             return current_time + timedelta(days=1)
         elif recurring == 'weekly':
